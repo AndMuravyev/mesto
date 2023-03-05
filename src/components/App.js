@@ -9,6 +9,7 @@ import { api } from '../utils/Api';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import { Route, Routes } from 'react-router-dom';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false)
@@ -102,15 +103,25 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
-        <Main 
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleAvatarProfileClick}
-          onCardClick={handleCardClick}
-          handleCardLike={handleCardLike}
-          handleCardDelete={handleCardDelete}
-          cards={cards}
-        />
+        <Routes>
+          <Route path='/'>
+            <Main 
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleAvatarProfileClick}
+              onCardClick={handleCardClick}
+              handleCardLike={handleCardLike}
+              handleCardDelete={handleCardDelete}
+              cards={cards}
+            />
+          </Route>
+          <Route path='/sign-up'>
+
+          </Route>
+          <Route path='/sign-in'>
+
+          </Route>
+        </Routes>
         <Footer />
         <EditProfilePopup 
           isOpen={isEditProfilePopupOpen}
