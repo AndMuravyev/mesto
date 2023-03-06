@@ -11,6 +11,8 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRouteElement from './ProtectedRoute';
+import Register from './Register';
+import Login from './Login';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false)
@@ -105,7 +107,8 @@ function App() {
       <div className="page">
         <Header />
         <Routes>
-          <Route path='/' element={
+          <Route path='/' 
+            element={
             <ProtectedRouteElement
             component={Main}
             onEditProfile={handleEditProfileClick}
@@ -117,12 +120,12 @@ function App() {
             cards={cards}
             />
           }/>
-          <Route path='/sign-up'>
-
-          </Route>
-          <Route path='/sign-in'>
-
-          </Route>
+          <Route path='/sign-up'
+            element={<Register/>}
+          />
+          <Route path='/sign-in'
+            element={<Login/>}
+          />
         </Routes>
         <Footer />
         <EditProfilePopup 
