@@ -9,10 +9,11 @@ import { api } from '../utils/Api';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import ProtectedRouteElement from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
+import * as auth from '../utils/auth';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false)
@@ -22,6 +23,10 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({})
   const [cards, setCards] = React.useState([])
   const [currentUser, setCurrentUser] = React.useState({})
+
+  const navigate = useNavigate()
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false)
+  const [email, setEmail] = React.useState('')
 
   function handleEditProfileClick() {
     setEditProfilePopupOpen(true)
@@ -66,8 +71,25 @@ function App() {
       .catch((err) => console.log(err))
   }
 
+  function checkToken() {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth.checkToken(jwt)
+      // auth.getContent(jwt)
+      .then((res) => {
+        if(res) {
+          setIsLoggedIn(true);
+          setEmail(res.data.email);
+          navigate('/', {replace: true})
+        }
+      })
+      .catch(err => console.log(err));
+    }
+  }
+
   React.useEffect(() => {
-    Promise.all([api.getInitialCards(), api.getUserInfo()])
+    checkToken();
+      Promise.all([api.getInitialCards(), api.getUserInfo()])
       .then(([cards, user]) => {
         setCards(cards);
         setCurrentUser(user)
@@ -102,10 +124,58 @@ function App() {
       .catch((err) => console.log(err))
   }
 
+
+  // function handleAuth(password, email) {
+  //   auth.authorize(password, email)
+  //     .then((token)) => {
+  //       auth.getContent(token)
+  //       .then((res) => {
+  //         // localStorage.setItem('jwt', res.token);
+  //         setEmail(res.data.email);
+  //         setIsLoggedIn(true);
+  //         navigate('/', {replace: true})
+  //     })
+  //     }
+  //     .catch(err => console.log(err));
+  // }
+
+  function handleAuth(password, email) {
+    auth.authorize(password, email)
+      .then((res) => {
+        if (res) {
+          localStorage.setItem('jwt', res.token)
+          setEmail(email)
+          setIsLoggedIn(true)
+          navigate('/', {replace: true})
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  function handleRegister(password, email) {
+    auth.register(password, email)
+      .then((res) => {
+        if (res) {
+          setEmail(email)
+          navigate('/sign-in', {replace: true})
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  function handleSignOut() {
+    localStorage.removeItem('jwt');
+    setEmail('');
+    setIsLoggedIn(false);
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header
+          email={email}
+          onClick={handleSignOut}
+        />
         <Routes>
           <Route path='/' 
             element={
@@ -118,13 +188,18 @@ function App() {
             handleCardLike={handleCardLike}
             handleCardDelete={handleCardDelete}
             cards={cards}
+            isLoggedIn={isLoggedIn} 
             />
-          }/>
+            }/>
           <Route path='/sign-up'
-            element={<Register/>}
+            element={<Register
+            onRegister={handleRegister}
+            />
+          }
           />
           <Route path='/sign-in'
-            element={<Login/>}
+            element={<Login
+            onAuth={handleAuth}/>}
           />
         </Routes>
         <Footer />
