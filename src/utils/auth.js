@@ -9,8 +9,22 @@ export const register = (data) => {
     },
     body: JSON.stringify(data)
   })
-  .then((response => response.json()))
-}
+  // .then((response => response.json()))
+  .then((response) => {
+    try {
+      if (response.status === 200){
+        return response.json();
+      }
+    } catch(e){
+      return (e)
+    }
+  })
+  .then((res) => {
+    return res;
+  })
+  .catch((err) => console.log(err));
+}; 
+
 
 export const authorize = (data) => {
   return fetch(`${BASE_URL}/signin`, {
@@ -21,8 +35,22 @@ export const authorize = (data) => {
     },
     body: JSON.stringify(data)
   })
-  .then((response => response.json()))
-}
+  // .then((response => response.json()))
+  .then((response) => {
+    try {
+      if (response.status === 200){
+        return response.json();
+      }
+    } catch(e){
+      return (e)
+    }
+  })
+  .then((res) => {
+    return res;
+  })
+  .catch((err) => console.log(err));
+}; 
+
 
 export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
@@ -32,5 +60,18 @@ export const checkToken = (token) => {
       "Authorization" : `Bearer ${token}`
     }
   })
-  .then((response => response.json()))
-}
+  // .then((response => response.json()))
+  .then((response) => {
+    try {
+      if (response.status === 200){
+        return response.json();
+      }
+    } catch(e){
+      return (e)
+    }
+  })
+  .then((res) => {
+    return res;
+  })
+  .catch((err) => console.log(err));
+}; 

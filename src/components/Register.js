@@ -20,7 +20,7 @@ function Register({onRegister}) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    onRegister(password, email)
+    onRegister({password, email})
   }
 
   return (
@@ -31,6 +31,7 @@ function Register({onRegister}) {
         placeholder="Email"
         name='email'
         type='email'
+        id="email"
         onChange={handleEmailChange}
         value={email || ""}
         required
@@ -40,6 +41,7 @@ function Register({onRegister}) {
         placeholder="Пароль"
         type="password"
         name="password"
+        id="password"
         onChange={handlePasswordChange}
         value={password || ""}
         required
