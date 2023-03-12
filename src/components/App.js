@@ -14,6 +14,7 @@ import ProtectedRouteElement from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
 import * as auth from '../utils/auth';
+import InfoTooltip from './InfoTooltip';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false)
@@ -27,6 +28,8 @@ function App() {
   const navigate = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = React.useState(false)
   const [email, setEmail] = React.useState('')
+  const [signupSuccess, setSignupSuccess] = React.useState(false)
+  const [isSignupPopupOpen, setSignupPopupOpen] = React.useState(false)
 
   function handleEditProfileClick() {
     setEditProfilePopupOpen(true)
@@ -45,6 +48,7 @@ function App() {
     setAddPlacePopupOpen(false)
     setEditAvatarPopupOpen(false)
     setImagePopupOpen(false)
+    setSignupPopupOpen(false)
   }
 
   function handleCardClick(card) {
@@ -125,29 +129,36 @@ function App() {
       .catch((err) => console.log(err))
   }
 
-  function handleRegister(password, email) {
-    auth.register(password, email)
+  function handleRegister({password, email}) {
+    auth.register({password, email})
       .then((res) => {
-        if (res) {
           console.log(res);
-          // setEmail(res.data.email)
+          setSignupSuccess(true);
+          setSignupPopupOpen(true)
           navigate('/sign-in', {replace: true})
-        }
       })
-      .catch(err => console.log(err))
+      .catch((err) => {
+        console.log(err);
+        setSignupSuccess(false)
+      })
+      .finally (() => setSignupPopupOpen(true))
   }
 
   function handleAuth(password, email) {
     auth.authorize(password, email)
+    .then((token) => {
+      auth.checkToken(token)
       .then((res) => {
-        if(res) {
-          localStorage.setItem('jwt', res.jwt);
-          setEmail(res.data.email);
           setIsLoggedIn(true);
+          setEmail(res.data.email);
           navigate('/', {replace: true});
-        }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err);
+        setSignupPopupOpen(true);
+        setSignupSuccess(false);
+      })
+    })
   }
 
   function handleSignOut() {
@@ -215,6 +226,13 @@ function App() {
           card={selectedCard}
           onClose={closeAllPopups}
           isOpen={isImagePopupOpen}
+        />
+        <InfoTooltip
+        isOpen={isSignupPopupOpen}
+        onClose={closeAllPopups}
+        signupSuccess={signupSuccess}
+        name='auth'
+        tooltip={signupSuccess ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.'}
         />
       </div>
     </CurrentUserContext.Provider>

@@ -1,5 +1,4 @@
 import React from "react";
-// import handleAuth from "./App";
 
 function Login({onAuth}) {
   const [email, setEmail] = React.useState('');
@@ -12,11 +11,6 @@ function Login({onAuth}) {
   function handlePasswordChange(evt) {
     setPassword(evt.target.value)
   }
-
-  // function handleChange(evt) {
-  //   const {value} = evt.target
-  //   evt.target.name === 'email' ? setEmail(value) : setPassword(value)
-  // }
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -31,6 +25,8 @@ function Login({onAuth}) {
         placeholder="Email"
         type="email"
         name="email"
+        minLength='6'
+        maxLength='64'
         onChange={handleEmailChange}
         value={email || ""}
         required
@@ -40,6 +36,7 @@ function Login({onAuth}) {
         placeholder="Пароль"
         type="password"
         name="password"
+        minLength='8'
         onChange={handlePasswordChange}
         value={password || ""}
         required

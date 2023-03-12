@@ -13,11 +13,6 @@ function Register({onRegister}) {
     setPassword(evt.target.value)
   }
 
-  // function handleChange(evt) {
-  //   const {value} = evt.target
-  //   evt.target.name === 'email' ? setEmail(value) : setPassword(value)
-  // }
-
   function handleSubmit(evt) {
     evt.preventDefault();
     onRegister({password, email})
@@ -32,6 +27,8 @@ function Register({onRegister}) {
         name='email'
         type='email'
         id="email"
+        minLength='6'
+        maxLength='64'
         onChange={handleEmailChange}
         value={email || ""}
         required
@@ -42,6 +39,7 @@ function Register({onRegister}) {
         type="password"
         name="password"
         id="password"
+        minLength='8'
         onChange={handlePasswordChange}
         value={password || ""}
         required
