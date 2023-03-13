@@ -146,11 +146,9 @@ function App() {
 
   function handleAuth(password, email) {
     auth.authorize(password, email)
-    .then((token) => {
-      auth.checkToken(token)
-      .then((res) => {
+      .then(() => {
           setIsLoggedIn(true);
-          setEmail(res.data.email);
+          setEmail(email);
           navigate('/', {replace: true});
       })
       .catch((err) => {
@@ -158,7 +156,6 @@ function App() {
         setSignupPopupOpen(true);
         setSignupSuccess(false);
       })
-    })
   }
 
   function handleSignOut() {

@@ -23,7 +23,7 @@ export const authorize = (password, email) => {
     },
     body: JSON.stringify({password, email})
   })
-  .then((response => response.json()))
+  .then(handleResponse)
   .then((data) => {
     if (data.token) {
       localStorage.setItem('jwt', data.token)
@@ -31,8 +31,6 @@ export const authorize = (password, email) => {
     }
   })
 }; 
-
-
 
 export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
