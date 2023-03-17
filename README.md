@@ -27,7 +27,7 @@
 
 ## Инструкция по развёртыванию:
 
-* Клонировать репозиторий git clone 
+* Клонировать репозиторий git clone https://github.com/muravevanastya/react-mesto-auth.git
 * Перейти в папку с проектом cd react-mesto-auth
 * Установить зависимости npm install
 * Запустить проект npm start
