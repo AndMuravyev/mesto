@@ -48,6 +48,6 @@
 
 ---
 
-https://muravevanastya.github.io/mesto-react/
+https://muravevanastya.github.io/react-mesto-auth/
 
 ---
